@@ -509,6 +509,37 @@ test("should not render the emptyView if content is emptied and refilled in the 
   equal(view.$().find('kbd:contains("OY SORRY GUVNAH")').length, 0);
 });
 
+test("my new test", function() {
+
+  var array = Ember.A([{ name: "Other Katz" }]);
+
+  var controller = Ember.ArrayController.create({
+    content: array
+  });
+
+  var container = Ember.CollectionView.create({
+    tagName: 'ul',
+    content: controller,
+    itemViewClass: Ember.View.extend({
+      template: Handlebars.compile('{{name}}')
+    })
+  });
+
+  Ember.run(function() {
+    container.appendTo('#qunit-fixture');
+  });
+
+  Ember.run(function() {
+    array.addObjects([{ name: "Scumbag Demon" }, { name: "Lord British" }]);
+  });
+
+  equal(container.$('li').length, 3, '3 list elements should be in the DOM');
+
+  Ember.run(function() {
+    container.destroy();
+  });
+});
+
 test("a array_proxy that backs an sorted array_controller that backs a collection view functions properly", function() {
 
   var array = Ember.A([{ name: "Other Katz" }]);
