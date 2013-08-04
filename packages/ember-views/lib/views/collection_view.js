@@ -298,7 +298,7 @@ Ember.CollectionView = Ember.ContainerView.extend(/** @scope Ember.CollectionVie
   */
   arrayDidChange: function(content, start, removed, added) {
     var itemViewClass = get(this, 'itemViewClass'),
-        addedViews = [], view, item, idx, len;
+        addedViews = [], view, item, idx, len, attrs;
 
     if ('string' === typeof itemViewClass) {
       itemViewClass = get(itemViewClass);
@@ -311,10 +311,19 @@ Ember.CollectionView = Ember.ContainerView.extend(/** @scope Ember.CollectionVie
       for (idx = start; idx < start+added; idx++) {
         item = content.objectAt(idx);
 
-        view = this.createChildView(itemViewClass, {
+        attrs = {
           content: item,
           contentIndex: idx
-        });
+        };
+
+        /* For issue #3026
+         * add context if this is not an each view
+         */
+        if(!Ember.Handlebars || this.constructor !== Ember.Handlebars.EachView){
+          attrs.context = item;
+        }
+
+        view = this.createChildView(itemViewClass, attrs);
 
         addedViews.push(view);
       }

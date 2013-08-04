@@ -517,13 +517,15 @@ test("my new test", function() {
     content: array
   });
 
-  var container = Ember.CollectionView.create({
+  var ContainerClass = Ember.CollectionView.extend({
     tagName: 'ul',
     content: controller,
     itemViewClass: Ember.View.extend({
       template: Handlebars.compile('{{name}}')
     })
   });
+
+  var container = ContainerClass.create();
 
   Ember.run(function() {
     container.appendTo('#qunit-fixture');
